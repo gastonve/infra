@@ -8,7 +8,7 @@ Basic Echobot example, repeats messages.
 Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
-
+import yfinance
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -36,6 +36,15 @@ def echo(update, context):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
 
+def echo2(update, context):
+    """Echo the user message."""
+    update.message.reply_text("Estamos trabajando para brindarte la info")
+    symbol = update.message.text
+    data = yfinance.download(symbol)['Adj Close']
+    update.message.reply_text(data.plot())
+
+    
+    
 
 def error(update, context):
     """Log Errors caused by Updates."""
@@ -57,7 +66,7 @@ def main():
     dp.add_handler(CommandHandler("help", help))
 
     # on noncommand i.e message - echo the message on Telegram
-    dp.add_handler(MessageHandler(Filters.text, echo))
+    dp.add_handler(MessageHandler(Filters.text, echo2))
 
     # log all errors
     dp.add_error_handler(error)
